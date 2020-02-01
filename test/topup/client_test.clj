@@ -1,10 +1,9 @@
 (ns topup.client-test
   (:require [topup.client :as c]
             [clojure.spec.test.alpha :as stest]
-            [org.httpkit.client :as client]))
+            [org.httpkit.client :as client]
+            [clojure.spec.alpha :as s]))
 
-(stest/instrument `c/invoke-service {:stub #{`c/invoke-service}})
+(stest/instrument `c/consume-api {:stub #{`c/consume-api}})
 
-(c/invoke-service nil {::query "test"})
-
-(stest/summarize-results (stest/check `c/run-query))
+(stest/summarize-results (stest/check `c/send-topup))
