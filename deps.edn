@@ -1,7 +1,16 @@
 {:paths ["src"]
  :deps  {org.clojure/clojure {:mvn/version "1.10.1"}
          org.clojure/data.json {:mvn/version "0.2.7"}
+         uswitch/lambada       {:mvn/version "0.1.2"}
          http-kit              {:mvn/version "2.4.0-alpha4"}}
  :aliases
  {:test {:extra-paths ["test"]
-         :extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}}}}}
+         :extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}}}
+  :cdk     {:main-opts ["-m" "stedi.cdk.main"]
+            :extra-paths ["cdk" "classes"]
+            :extra-deps  {stedi/cdk-clj {:git/url "https://github.com/StediInc/cdk-clj.git"
+                                         :sha     "2ec4569146bf322b97141f24b1284f22db231175"}
+                          uberdeps {:mvn/version "0.1.6"}
+                          software.amazon.awscdk/s3 {:mvn/version "1.12.0.DEVPREVIEW"}
+                          software.amazon.awscdk/lambda {:mvn/version "1.16.3.DEVPREVIEW"}
+                          }}}}
