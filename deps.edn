@@ -4,13 +4,16 @@
          uswitch/lambada       {:mvn/version "0.1.2"}
          http-kit              {:mvn/version "2.4.0-alpha4"}}
  :aliases
- {:test {:extra-paths ["test"]
-         :extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}}}
-  :cdk     {:main-opts ["-m" "stedi.cdk.main"]
-            :extra-paths ["cdk" "classes"]
+ {
+  :cdk     {:main-opts ["-m" "stedi.cdk.main" "synth"]}
+  :classes {:extra-paths ["classes"]}
+  :dev     {:extra-paths ["cdk"]
             :extra-deps  {stedi/cdk-clj {:git/url "https://github.com/StediInc/cdk-clj.git"
-                                         :sha     "2ec4569146bf322b97141f24b1284f22db231175"}
+                                         :sha     "8de0174c47ef456f0c22a6bec0ca9845844cc818"}
                           uberdeps {:mvn/version "0.1.6"}
-                          software.amazon.awscdk/s3 {:mvn/version "1.12.0.DEVPREVIEW"}
-                          software.amazon.awscdk/lambda {:mvn/version "1.16.3.DEVPREVIEW"}
-                          }}}}
+                          org.clojure/test.check {:mvn/version "0.10.0"}
+                          software.amazon.awscdk/s3 {:mvn/version "1.20.0"}
+                          software.amazon.awscdk/lambda {:mvn/version "1.20.0"}
+                          }}
+  :test {:extra-paths ["test"]
+         :extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}}}}}

@@ -6,11 +6,7 @@
 
 (deflambdafn com.busqandote.topup.SendTopup
   [in out ctx]
-  (let [in (json/read-str (io/reader in) :key-fn keyword)
+  (let [in (json/read (io/reader in) :key-fn keyword)
         response (c/send-topup (get in :phone-number))]
     (with-open [w (io/writer out)]
       (json/write response w))))
-
-(let [in (json/read-str "{\"phone-number\":1,\"b\":2}" :key-fn keyword)]
-  (print (get in :phone-number)))
-

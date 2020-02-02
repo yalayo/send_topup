@@ -5,6 +5,7 @@
             [uberdeps.api :as uberdeps]))
 
 (cdk/import [[App Construct Duration Stack] :from "@aws-cdk/core"]
+            [[Bucket] :from "@aws-cdk/aws-s3"]
             [[Code Function Runtime Tracing] :from "@aws-cdk/aws-lambda"])
 
 (defn- clean
@@ -24,26 +25,30 @@
       (clean)
       (io/make-parents "classes/.")
       (io/make-parents jarpath)
-      (compile 'depswatch.lambada)
+      (compile 'topup.client)
+      (compile 'topup.lambda)
       (uberdeps/package deps jarpath {:aliases [:classes]}))
     (Code/fromAsset jarpath)))
 
-(defn LambadaFunction
-  [scope id props]
-  (Function scope
-            id
-            (merge {:code       code
-                    :memorySize 2048
-                    :runtime    (:JAVA_8 Runtime)
-                    :tracing    Tracing/ACTIVE}
-                   props)))
-
-(defn AppStack
-  [scope id]
-  (let [stack         (Stack scope id)]
-    (stack))
-
 (def app (App))
 
-(AppStack app "depswatch-dev")
-(AppStack app "depswatch-prod")
+(def stack (Stack app "send-topup-lambda"))
+
+(def bucket (Bucket stack "send-topup-lambda-bucket"))
+
+(def my-fn
+  (Function stack
+            "send-topup-fn"
+            {:code        code        ;; Calling a static method
+             :handler     "com.busqandote.topup.SendTopup"
+             :runtime     (:JAVA_8 Runtime)               ;; Getting a static property
+             :environment {"BUCKET" (:bucketName bucket)} ;; Getting an instance property
+             :memorySize 512
+             :timeout (Duration/seconds 30)
+             }))
+
+;; We can grant the function write access to the bucket using an
+;; instance method
+
+(Bucket/grantWrite bucket my-fn)
+
